@@ -1,8 +1,7 @@
 import connectDB from "./config/db_connection.js";
 import express from "express";
 import morgan from "morgan";
-import ticketsRoute from "./routes/ticket.routes.js";
-import dashboard from "./routes/dashboard.routes.js";
+import tareasRoutes from "./routes/v1/index.routes.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { redisClient } from "./config/redis_connection.js";
@@ -32,13 +31,11 @@ app.use(
 app.use(morgan(format));
 app.use(express.json());
 app.use(cookieParser());
-app.use("temp", express.static(path.join(__dirname, "temp")));
-app.use(ticketsRoute);
-app.use(dashboard);
+//app.use("temp", express.static(path.join(__dirname, "temp")));
+app.use(tareasRoutes);
 
 connectDB();
 redisClient.connect().then(() => {
-  console.log(__dirname);
   console.log("Redis connected");
   console.log(`Server running on port ${process.env.BACKEND_PORT}`);
   app.listen(process.env.BACKEND_PORT);

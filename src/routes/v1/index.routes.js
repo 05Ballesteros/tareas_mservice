@@ -42,3 +42,5 @@ router.put(
   formatearCamposFecha,
   populateTickets
 );
+
+export default router;
