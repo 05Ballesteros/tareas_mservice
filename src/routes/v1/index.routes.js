@@ -1,7 +1,7 @@
 import { Router } from "express";
 import {
     crearTarea,
-    getTarea
+    getTareas
 } from "../../controllers/tarea.controller.js";
 import { verifyToken } from "../../middleware/verifyToken.middleware.js";
 import { verifyRole } from "../../middleware/verifyRole.middleware.js";
@@ -9,10 +9,10 @@ import { populateTickets } from "../../middleware/populateTickets.middleware.js"
 import { formatearCamposFecha } from "../../middleware/formatearFechas.middleware.js";
 const router = Router();
 router.get(
-  "/tareas/",
+  "/tareas/estado/:estado",
   verifyToken,
-  verifyRole,
-  getTarea,
+  verifyRole(["Usuario"]),
+  getTareas,
   formatearCamposFecha,
   populateTickets
 );

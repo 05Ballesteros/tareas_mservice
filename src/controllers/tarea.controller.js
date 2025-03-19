@@ -1,23 +1,30 @@
 import mongoose from "mongoose";
 import * as Gets from "../repository/gets.js";
 
-//Obtener tarea por id
-export const getTarea = async (req, res, next) => {
-    const { id } = req.params;
-
+//Obtener todas las tareas del usuario con estado en base a la collection
+export const getTareas = async (req, res, next) => {
     try {
-        const RES = await Gets.getTareaPorID(id);
-        if (!RES) {
-            return res.status(404).json({
-                desc: "No se encontro la tarea en la base de datos",
-            });
-        }
-        req.tarea = RES;
-        return next();
-    } catch (error) {
-        console.log(error);
-        return res.status(500).json({ desc: "Error interno en el servidor" });
-    }
+        let result = [];
+        const paramEstado = req.params.estado;
+        const { rol, userId } = req.session.user;
+        const Estado = await Gets.getEstado(paramEstado);
+        if (rol === "Usuario") { 
+            result = await Gets.getTareasUsuario(userId, Estado); 
+        } else if (rol === "Moderador") { 
+            result = await Gets.getTareasModerador(userId, Estado);
+        } 
+        req.tareas = result;
+        console.log("TAREAS", result);
+        return result
+          ? next()
+          : res
+              .status(400)
+              .json({ desc: "No se encotraron tareas." });
+      } catch (error) {
+        return res
+          .status(500)
+          .json({ desc: "Ocurrió un Error al obtener las tareas." });
+      }
 };
 
 export const crearTarea = async (req, res, next) => {
@@ -88,4 +95,24 @@ export const resolverTarea = async (req, res, next) => {
 };
 
 export const reasignarTarea = async (req, res, next) => {
+};
+
+export const getTareabyId = async (req, res, next) => {
+    console.log("Si estoy llegando");
+    const { id } = req.params;
+
+    try {
+        const RES = await Gets.getTareaPorID(id);
+        if (!RES) {
+            return res.status(404).json({
+                desc: "No se encontro la tarea en la base de datos",
+            });
+        }
+        req.tarea = RES;
+        console.log(RES);
+        return next();
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ desc: "Error interno en el servidor" });
+    }
 };
