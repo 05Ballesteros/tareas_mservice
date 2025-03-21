@@ -1,8 +1,8 @@
-import { TICKETS } from "../models/index.js";
+import { TAREAS } from "../models/index.js";
 
-export const populateTickets = async (req, res) => {
+export const populateTareas = async (req, res) => {
   try {
-    const POPULATE = await TICKETS.populate(req.ticketsFormateados, [
+    const POPULATE = await TAREAS.populate(req.tareasFormateadas, [
       { path: "Tipo_incidencia", select: "Tipo_de_incidencia _id" },
       { path: "Categoria", select: "Categoria _id" },
       { path: "Servicio", select: "Servicio _id" },
@@ -41,15 +41,6 @@ export const populateTickets = async (req, res) => {
         populate: [{ path: "Area", select: "Area _id" }],
       },
       {
-        path: "Cliente",
-        select: "Nombre Correo Telefono Ubicacion _id",
-        populate: [
-          { path: "Dependencia", select: "Dependencia _id" },
-          { path: "Direccion_General", select: "Direccion_General _id" },
-          { path: "direccion_area", select: "direccion_area _id" },
-        ],
-      },
-      {
         path: "Historia_ticket",
         select: "Titulo Mensaje Fecha",
         populate: {
@@ -60,11 +51,12 @@ export const populateTickets = async (req, res) => {
     ]);
     if (!POPULATE) {
       console.log("error en populate");
-      return res.status(500).json({ desc: "Error al procesar los tickets." });
+      return res.status(500).json({ desc: "Error al procesar las tareas." });
     }
+    console.log("Populate", POPULATE);
     return res.status(200).json(POPULATE);
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ desc: "Error al formatear los tickets." });
+    return res.status(500).json({ desc: "Error al formatear las tareas." });
   }
 };

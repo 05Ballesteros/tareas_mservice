@@ -14,7 +14,6 @@ export const getTareas = async (req, res, next) => {
             result = await Gets.getTareasModerador(userId, Estado);
         } 
         req.tareas = result;
-        console.log("TAREAS", result);
         return result
           ? next()
           : res

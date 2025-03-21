@@ -5,7 +5,7 @@ import {
 } from "../../controllers/tarea.controller.js";
 import { verifyToken } from "../../middleware/verifyToken.middleware.js";
 import { verifyRole } from "../../middleware/verifyRole.middleware.js";
-import { populateTickets } from "../../middleware/populateTickets.middleware.js";
+import { populateTareas } from "../../middleware/populateTareas.middleware.js";
 import { formatearCamposFecha } from "../../middleware/formatearFechas.middleware.js";
 const router = Router();
 router.get(
@@ -14,7 +14,7 @@ router.get(
   verifyRole(["Usuario"]),
   getTareas,
   formatearCamposFecha,
-  populateTickets
+  populateTareas
 );
 
 // router.get(
@@ -33,7 +33,7 @@ router.post(
   verifyRole,
   crearTarea,
   formatearCamposFecha,
-  populateTickets
+  populateTareas
 );
 
 // router.put(
