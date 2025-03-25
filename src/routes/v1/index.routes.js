@@ -28,7 +28,7 @@ router.get(
 
 //Crear tarea
 router.post(
-  "/tareas/",
+  "/tareas/crear/tarea",
   verifyToken,
   verifyRole,
   crearTarea,

@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import * as Gets from "../repository/gets.js";
+import { postCrearTarea } from "../repository/posts.js";
 
 //Obtener todas las tareas del usuario con estado en base a la collection
 export const getTareas = async (req, res, next) => {
@@ -27,41 +28,39 @@ export const getTareas = async (req, res, next) => {
 };
 
 export const crearTarea = async (req, res, next) => {
-    const session = req.mongoSession;
-    if (!session) {
-        return res
-            .status(500)
-            .json({ error: "No hay sesión activa para la transacción." });
-    }
-
     try {
-        let ticketState = req.body;
+        const session = req.mongoSession;
+        if (!session) {
+            return res
+                .status(500)
+                .json({ error: "No hay sesión activa para la transacción." });
+        }
+        let tareaState = req.body;
         const { userId, nombre, rol, correo } = req.session.user;
-        Estado = await Gets.getEstadoTicket("NUEVOS");
-
-        ticketState = {
-            ...ticketState,
-            Cliente: req.cliente ? req.cliente : ticketState.Cliente,
+        Estado = await Gets.getEstado("NUEVOS");
+        tareaState = {
+            ...tareaState,
             Estado,
             Fecha_hora_creacion: obtenerFechaActual(),
             Fecha_limite_resolucion_SLA: addHours(
                 obtenerFechaActual(),
-                ticketState.tiempo
+                tareaState.tiempo
             ),
             Fecha_limite_respuesta_SLA: addHours(
                 obtenerFechaActual(),
-                ticketState.tiempo
+                tareaState.tiempo
             ),
             Fecha_hora_ultima_modificacion: obtenerFechaActual(),
             Fecha_hora_cierre: fechaDefecto,
             Fecha_hora_resolucion: fechaDefecto,
             Fecha_hora_reabierto: fechaDefecto,
             Creado_por: userId,
-            standby: ticketState.standby,
-            Asignado_a: ticketState.standby ? Asignado_a._id : ticketState.Asignado_a,
+            standby: tareaState.standby,
+            Asignado_a: tareaState.Asignado_a,
         };
-        const RES = await postCrearTicket(
-            ticketState,
+        console.log(tareaState);
+        const RES = await postCrearTarea(
+            tareaState,
             userId,
             nombre,
             rol,

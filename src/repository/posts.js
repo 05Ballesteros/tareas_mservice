@@ -1,6 +1,6 @@
 import { TICKETS, ESTADOS, USUARIO } from "../models/index.js";
 import { obtenerFechaActual } from "../utils/fechas.js";
-export const postCrearTicket = async (
+export const postCrearTarea = async (
   nuevoTicket,
   userId,
   nombre,

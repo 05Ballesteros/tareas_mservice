@@ -53,7 +53,6 @@ export const populateTareas = async (req, res) => {
       console.log("error en populate");
       return res.status(500).json({ desc: "Error al procesar las tareas." });
     }
-    console.log("Populate", POPULATE);
     return res.status(200).json(POPULATE);
   } catch (error) {
     console.log(error);
